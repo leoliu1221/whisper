@@ -115,6 +115,9 @@ class MultiHeadAttention(nn.Module):
         self, q: Tensor, k: Tensor, v: Tensor, mask: Optional[Tensor] = None
     ) -> Tuple[torch.Tensor, Optional[torch.Tensor]]:
         n_batch, n_ctx, n_state = q.shape
+        # Forcing n_ctx and n_state to be int, because sometimes it can be class of tensor. 
+        n_ctx = int(n_ctx)
+        n_state = int(n_state)
         scale = (n_state // self.n_head) ** -0.25
         q = q.view(*q.shape[:2], self.n_head, -1).permute(0, 2, 1, 3)
         k = k.view(*k.shape[:2], self.n_head, -1).permute(0, 2, 1, 3)
